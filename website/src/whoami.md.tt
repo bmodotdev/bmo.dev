@@ -1,0 +1,50 @@
+[% PROCESS definitions.tt %]
+
+---
+title: whoami
+header-includes: |
+  [% bmo_logo_menu %]
+description: 'whoami'
+keywords: [foo, bar]
+---
+
+[% INCLUDE header.md.tt %]
+
+Hi, my name is [% firstname %] and I'm a Linux and electronics enthusiast currently residing in [% location %]; hailing from [% birth_location %].
+I'm a Software Developer at [% cpanel %], where I primarily work in Perl, JavaScript, and Bash.
+Prior to my role as a developer, I was a Senior Technical Analyst at cPpanel, and an Abuse Specialist & Vetern Technical Analyst for [% knownhost %].
+
+If I'm not working on my Raspberry PI cluster or hacking on some electronics, you might find me out on a run, playing some Titanfall, or at a concert with my wife [% wife %].
+
+## Biblio
+
+::: {#timeline .timeline} :::
+At a young age, I developed a strong sense of curiosity thanks to my parents.
+My Mom was a high school chemistry teacher, which meant I was regularly carying out my own experiements in her lab.
+My Dad worked as an IT administrator, physics lab technician, and general contractor in his brother's construction company.
+Whether it was building my own FM circuit, creating my first endothermic reaction, or helping frame-up a staircase,
+those early experiences fostered a life-long desire to *dissect* things that intrigue me, *understand* things that don't make sense, and *create* anything I dare.
+
+My discovery of Linux was not far from [xkcd-456](https://xkcd.com/456):
+![xkcd-465](https://imgs.xkcd.com/comics/cautionary.png)
+
+Around 2009, I went over to a friends house to find him surrounded by beige boxes that he salvaged from various thrift stores.
+He started telling my all about this thing called bitcoin and how he used Linux to mine this new digital currency.
+After I got home, I started installing my first Linux distro, Debian Lenny; after which, I didn't sleep for three days straight.
+I was enthralled with this new world of Linux and Open Source; also, crying over `xorg` crashing.
+
+In 2011, while working a dead-end job in the mall, repairing iPhones and other consumer electronics, I cam across a job posting for a Linux Technical Analyst at KnownHost.
+It was the first time I really saw the potential in my hobby as a full-time job.
+I scheduled an interview with enough room to study relentlessly; afterall, I almost exclusively used the GUI in Linux.
+I managed to snag the job and I couldn't believe it.
+It began to dawn on me what Open Source software could mean for me.
+All the information/tools I needed to learn, grow, and succeed was available to me; nothing held me back but myself.
+Everyday of the first two months of my new Linux job, I came in early to read coworker tickets; I left late to see problems through; I stopped at the coffee shop to study more.
+After working at KnownHost for a few years supporting cPanel, Plesk, DirectAdmin, I moved into an Abuse Specialist role where I helped keep our network clean and stable.
+
+In 2016, an opportunity at cPanel opened up, and I found myself in Texas about two weeks later.
+There was no shortage of challenging problems which allowed me to grow rapidly.
+Over the course of my first five years, I averaged a promotion per year, exhasuting all the technician levels in our Support Department, and moving into a Developer role.
+:::
+
+[% INCLUDE footer.md.tt %]

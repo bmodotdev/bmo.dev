@@ -1,0 +1,17 @@
+[% PROCESS definitions.tt %]
+
+---
+title: 'be more'
+header-includes: |
+  [% bmo_logo_menu %]
+description: 'blog'
+keywords: [foo, bar]
+---
+
+[% INCLUDE header.md.tt %]
+
+::: {.center}
+## Sorry! Page not found!
+:::
+
+[% INCLUDE footer.md.tt %]

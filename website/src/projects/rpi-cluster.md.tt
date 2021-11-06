@@ -1,0 +1,38 @@
+[% PROCESS definitions.tt %]
+
+---
+title: Raspberry Pi Cluster
+header-includes: |
+  [% bmo_logo_menu %]
+description: |
+    4 node Raspberry Pi 4 Cluster running k3s
+---
+
+[% INCLUDE header.md.tt %]
+
+[![rpi4 cluster](/assets/rpi4_cluster.jpg){style="float: left;margin-right: 15px;margin-top: 5px;" width="500"}](/assets/rpi4_cluster.jpg)
+
+So I've been working on building a cluster of Raspberry Pi's to self host different projects, and in general, experiment and learn about
+kubernetes and devops. It's really been a lot of fun getting everything setup.
+
+All of the pi's are powered by PoE, one
+[2.5](https://www.amazon.com/dp/B07WD7HXSQ?psc=1&ref=ppx_yo2_dt_b_product_details) amps,
+two [3.5](https://www.amazon.com/gp/product/B081C1TW3C/ref=ppx_yo_dt_b_search_asin_title?ie=UTF8&psc=1) amps, and one with a whopping
+[5](https://geekworm.com/products/raspberry-pi-4-model-b-pi-3-model-b-x765-power-over-ethernet-poe-expansion-board?_pos=1&_sid=ece9e6eb7&_ss=r)
+amps of output!
+
+For storage, 3 of the pi's use [Geekworm's X862](https://geekworm.com/products/for-raspberry-pi-4-x862-v2-0-m-2-ngff-sata-ssd-storage-expansion-board-support-key-b-2280-ssd?_pos=2&_sid=cb38ba560&_ss=r&variant=33657774375000)
+M.2 USB 3.0 board, which also supports UASP! One of the pi's I intended to create a raid array using
+[Geekworm's X828](https://geekworm.com/collections/nas-storage/products/raspberry-pi-x828-stackable-2-5-sata-hdd-ssd-shield), a *stackable*
+USB 3.0 SATA board; however, I only orderd one before the part's shortage hit and now they've been out of stock for some time. Creating a raid
+was also the main reason to get such a beefy PoE HAT.
+
+If you look closely, you'll also see that I managed to get the [Geeekpi Ice Tower](https://www.amazon.com/gp/product/B07ZV1LLWK/ref=ppx_yo_dt_b_search_asin_title?ie=UTF8&psc=1)
+to fit with the PoE HAT's! Most PoE HAT's for the pi are meant to sit flush against the board; however, this obstructs most of the beefy
+coolers for the pi. It's kinda silly, but I realized I could just put the HAT's above the cooler, and run jumpers. It doesn't produce
+the cleanest look, but it's quite compact with plenty of room for airflow. I want to overclock the pi's to squeze every bit of performance
+out of them I can, so the excessive coolers should help prevent the inevitable throttling that results from overclocking.
+
+I'm currently running [k3s](https://k3s.io/) on all of them to manage the different hosted applications.
+
+[% INCLUDE footer.md.tt %]

@@ -1,0 +1,13 @@
+[%
+  domain            = 'bmo.dev'
+  title             = 'be more'
+  firstname         = 'Will'
+  lastname          = 'Little'
+  fullname          = 'William E. Little Jr.'
+  location          = 'Houston, Texas'
+  birth_location    = 'Homewood, Alabama'
+  wife              = 'Catherine'
+  knownhost         = '[KnownHost](https://knownhost.come)'
+  cpanel            = '[cPanel](https://cpanel.net)'
+  bmo_logo_menu     =  '[![](/assets/bmo.png){style="float: left;margin-right: 20px;margin-top: 20px;" width="50"}](/)'
+%]

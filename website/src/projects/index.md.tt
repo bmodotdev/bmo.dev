@@ -1,0 +1,15 @@
+[% PROCESS definitions.tt %]
+
+---
+title: Projects
+header-includes: |
+  [% bmo_logo_menu %]
+description: |
+    4 node Raspberry Pi 4 Cluster running k3s
+---
+
+[% INCLUDE header.md.tt %]
+
+### [A Kubernetes Raspberry Pi Cluster!](/projects/rpi-cluster.html)
+
+[% INCLUDE footer.md.tt %]

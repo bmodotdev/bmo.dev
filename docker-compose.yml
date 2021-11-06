@@ -1,0 +1,35 @@
+version: "3.9"
+
+volumes:
+  certbot-conf:
+  certbot-www:
+
+services:
+  webserver:
+    image: webserver:0.0.1
+    container_name: webserver
+    env_file: production.env
+    build:
+      context: ./nginx
+      args:
+        - PUID=101
+        - PGID=101
+    cap_add:
+      - NET_ADMIN
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - certbot-conf:/etc/letsencrypt/:ro
+      - certbot-www:/var/www/certbot/:ro
+
+  certbot:
+    image: certbot/certbot:latest
+    depends_on:
+      - nginx
+    command: sh -c "certbot certonly --webroot --webroot-path /var/www/certbot -d bmo.dev --text --agree-tos --email ops@bmo.dev --rsa-key-size 4096 -vv --keep-until-expiring --preferred-challenges=http"
+    entrypoint: ""
+    volumes:
+      - certbot-conf:/etc/letsencrypt/:rw
+      - certbot-www:/var/www/certbot/:rw

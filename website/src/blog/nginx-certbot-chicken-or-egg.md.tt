@@ -1,0 +1,172 @@
+[% PROCESS definitions.tt %]
+
+---
+title: 'Nginx & Certbot: Chicken or Egg?'
+lang: en-US
+date: November 14, 2021
+keywords: [nginx, certbot, docker, inotify] 
+header-includes: |
+  [% bmo_logo_menu %]
+description: |
+    How can Nginx and Certbot work together?
+---
+
+[% INCLUDE header.md.tt %]
+
+[![chicken or egg](/assets/chicken_or_egg.jpg)](/assets/chicken_or_egg.jpg)
+If you are like me, you want your website to be as *“set it, and forget it”* as possible.
+I don’t want to worry about whether I have a TLS certificate or not, I just want my website served over HTTPS.
+Now there are plenty of blog posts about how to setup your website with a free TLS certificate; however, most
+ignore the initialization problem. How do I get my very first TLS certificate?
+
+## Encrypt the Web
+Over the last decade, the Electronic Frontier Foundation has made it’s mission to ensure HTTPS is Everywhere, and as of
+Septemeber 2021, they've finally declared “[HTTPS is Actually Everywhere](https://www.eff.org/deeplinks/2021/09/https-actually-everywhere)”.
+With the proliferation of free TLS/SSL certificates from Let’s Encrypt, browser security initiatives, and search engine
+rankings, it has become an expectation that all websites serve content over HTTPS, which I think is great!
+
+To make this easier, the EFF has released [Certbot](https://certbot.eff.org/), a tool for automating the work to obtain
+free TLS/SSL certificates from Let’s Encrypt. The tool comes with a wide range of
+[plugins](https://eff-certbot.readthedocs.io/en/stable/using.html#getting-certificates-and-choosing-plugins), including
+Apache and Nginx support out-of-the-box. Heck, it even comes with a standalone web server, making it extremely flexible!
+A huge part of this tool is managing the required challenges of being issued a TLS certificate.
+
+## Domain Control Validation
+In order to ensure that Let’s Encrypt does not issue TLS certificates to an unauthorized user, they require that you
+complete some type of challenge. The most common of these are HTTP DCV and DNS DCV.
+
+With HTTP DCV, Let’s Encrypt provides you with a token which you place at “http://\<domain\>/.well-known/acme-challenge/\<token\>”.
+Let’s Encrypt then fetches that token to verify you have control over the domain. With DNS DCV, Let’s Encrypt asks
+you to place this token either in a TXT or CNAME DNS record.
+
+DNS DCV can be more convenient if you already control your own DNS on the same host as your web server; otherwise, it
+can be a bit more riskier or challenging. If DNS is controlled on another host than your web server, then you need a
+way for your web server to securely communicate the required changes to your DNS server. This typically means exposing
+an API key of your DNS provider, which comes with great risk. If a malicious user gained access to that key, they could
+hijack all traffic to your domain, not just your website! More likely, they  might squat nefarious sites on your domain.
+For this reason, I don’t want to use DNS DCV.
+
+## Chicken or Egg
+So what’s the problem? Typically, I would have just a single vhost configuration file for a domain, containing
+both SSL and non-SSL server blocks. The problem is, if the path passed to the
+[ssl_certificate](https://nginx.org/en/docs/http/ngx_http_ssl_module.html#ssl_certificate) directive does not exist;
+Nginx will crash.
+
+* How can I leverage Nginx for HTTP DCV when the vhost is considered invalid?
+
+Well, the answer is simple, place the server block for non-SSL in
+[bmo.dev.conf](https://github.com/bmodotdev/bmo.dev/blob/main/nginx/etc_nginx/conf.d/bmo.dev.conf) and the SSL vhost
+in [bmo.dev_SSL.conf](https://github.com/bmodotdev/bmo.dev/blob/main/nginx/etc_nginx/conf.d/bmo.dev_SSL.conf).
+With this change, Nginx doesn’t crash because of our non-SSL vhost, but it does crash for our SSL vhost. Now we have
+new problems.
+
+* How do I disable “bmo.dev_SSL.conf” before Nginx start?
+* How do I enable “bmo.dev_SSL.conf” once an TLS certificate is issued?
+
+## Docker ENTRYPOINT vs CMD
+First let’s understand the difference between a docker image’s ENTRYPOINT opposed to it’s CMD:
+
+* CMD: default command and parameters for a container; can be overridden
+* ENTRYPOINT: default command and parameters which cannot be overridden
+
+It turns out the [Official Nginx Docker image](https://github.com/nginxinc/docker-nginx) follows best practices.
+Nginx makes use of a flexible ENTRYPOINT script, “/docker-entrypoint.sh”, which scans an include directory,
+“/docker-entrypoint.d/*.sh”, for adhoc boostrap scripts:
+
+```
+$ docker inspect --format='{{.Config.Entrypoint}}' nginx
+[/docker-entrypoint.sh]
+
+# docker run --rm nginx cat /docker-entrypoint.sh
+#!/bin/sh
+# vim:sw=4:ts=4:et
+
+set -e
+
+if [ -z "${NGINX_ENTRYPOINT_QUIET_LOGS:-}" ]; then
+    exec 3>&1
+else
+    exec 3>/dev/null
+fi
+
+if [ "$1" = "nginx" -o "$1" = "nginx-debug" ]; then
+    if /usr/bin/find "/docker-entrypoint.d/" -mindepth 1 -maxdepth 1 -type f -print -quit 2>/dev/null | read v; then
+        echo >&3 "$0: /docker-entrypoint.d/ is not empty, will attempt to perform configuration"
+
+        echo >&3 "$0: Looking for shell scripts in /docker-entrypoint.d/"
+        find "/docker-entrypoint.d/" -follow -type f -print | sort -V | while read -r f; do
+            case "$f" in
+                *.sh)
+                    if [ -x "$f" ]; then
+                        echo >&3 "$0: Launching $f";
+                        "$f"
+                    else
+                        # warn on shell scripts without exec bit
+                        echo >&3 "$0: Ignoring $f, not executable";
+                    fi
+                    ;;
+                *) echo >&3 "$0: Ignoring $f";;
+            esac
+        done
+
+        echo >&3 "$0: Configuration complete; ready for start up"
+    else
+        echo >&3 "$0: No files found in /docker-entrypoint.d/, skipping configuration"
+    fi
+fi
+
+exec "$@"
+```
+
+This is actually how the Nginx docker image uses the “envsubst” command for
+[templating](https://github.com/docker-library/docs/tree/master/nginx#using-environment-variables-in-nginx-configuration-new-in-119).
+This gives us great flexibility when it comes to configuring our server. Now we can copy our
+[40-configure-and-monitor-ssl.sh](https://github.com/bmodotdev/bmo.dev/blob/main/nginx/docker-entrypoint.d/40-configure-and-monitor-ssl.sh)
+script into the container, and it will be executed before Nginx starts, allowing us to move *invalid* “*_SSL.conf”
+vhost’s out of the way before Nginx starts.
+
+## Docker Volumes
+Our final task is to ensure our “*_SSL.conf” vhost is re-enabled and Nginx reloaded, once we receive the new TLS
+certificate; but how can we know when it’s been issued? Take a look at the
+[docker-compose.yml](https://github.com/bmodotdev/bmo.dev/blob/main/docker-compose.yml) file:
+
+```
+# for readability, config truncated to volumes only
+volumes:
+  certbot-conf:
+  certbot-www:
+
+services:
+  webserver:
+    volumes:
+      - certbot-conf:/etc/letsencrypt/:ro
+      - certbot-www:/var/www/certbot/:ro
+  certbot:
+    volumes:
+      - certbot-conf:/etc/letsencrypt/:rw
+      - certbot-www:/var/www/certbot/:rw
+```
+
+We use docker volumes to expose the document root of our non-SSL vhost to Certbot. This allows Certbot to write the
+token to a file for HTTP DCV. We also expose the Let’s Encrypt configuration directory from Certbot to Nginx. This
+allows Nginx to see the newly acquired TLS certificates.
+
+## inotify-tools
+Now we know how newly issued TLS certificates are exposed to the Nginx conftainer, we just have to watch our TLS
+certificate directory. We could poll this directory by looping and sleeping, but there is a much more elegant solution.
+
+The [inotify](https://www.man7.org/linux/man-pages/man7/inotify.7.html) API provides a mechanism for monitoring
+filesystem events and was merged into the Linux kernel in 2.6.13. The apt package “inotify-tools” simply exposes this
+interface to the shell. We can leverage our [Dockerfile](https://github.com/bmodotdev/bmo.dev/blob/main/nginx/Dockerfile)
+to install this tool when the image is built. Using Nginx’s dynamic ENTRYPOINT, we simply launch a background script
+that watches this directory, re-enables our “*_SSL.conf” vhosts, and reloads Nginx.
+
+## Conclusion
+Using docker, we can launch a complete Nginx config for our website, whether our TLS certificate has been issued, or
+even when our Nginx configuration may not be valid. Using the dynamic Nginx ENTRYPOINT script, we can launch a
+bootstrap process into the container background which leverages the Linux “inotify” API to dynamically manage vhost’s
+and reload Nginx.
+
+Checkout the source code on [github](https://github.com/bmodotdev/bmo.dev).
+
+[% INCLUDE footer.md.tt %]

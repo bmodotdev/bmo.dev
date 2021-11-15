@@ -1,0 +1,15 @@
+[% PROCESS definitions.tt %]
+
+---
+title: Blog
+header-includes: |
+  [% bmo_logo_menu %]
+description: |
+    A list of blog posts I’ve written
+---
+
+[% INCLUDE header.md.tt %]
+
+### [Nginx & Certbot: Chicken or Egg?](/blog/nginx-certbot-chicken-or-egg)
+
+[% INCLUDE footer.md.tt %]

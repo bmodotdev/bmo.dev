@@ -9,5 +9,5 @@
   wife              = 'Catherine'
   knownhost         = '[KnownHost](https://knownhost.come)'
   cpanel            = '[cPanel](https://cpanel.net)'
-  bmo_logo_menu     =  '[![](/assets/bmo.png){style="float: left;margin-right: 20px;margin-top: 20px;" width="50"}](/)'
+  bmo_logo_menu     =  '[![](/assets/bmo_50x64.png){style="float: left;margin-right: 20px;margin-top: 20px;"}](/)'
 %]

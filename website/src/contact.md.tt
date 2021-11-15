@@ -1,0 +1,16 @@
+[% PROCESS definitions.tt %]
+
+---
+title: 'Contact'
+keywords: [foo, bar]
+description: 'How can you reach me?'
+lang: en-US
+header-includes: |
+  [% bmo_logo_menu %]
+---
+
+[% INCLUDE header.md.tt %]
+
+contact [at] bmo.dev
+
+[% INCLUDE footer.md.tt %]

@@ -152,7 +152,7 @@ token to a file for HTTP DCV. We also expose the Let’s Encrypt configuration d
 allows Nginx to see the newly acquired TLS certificates.
 
 ## inotify-tools
-Now we know how newly issued TLS certificates are exposed to the Nginx conftainer, we just have to watch our TLS
+Now we know how newly issued TLS certificates are exposed to the Nginx container, we just have to watch our TLS
 certificate directory. We could poll this directory by looping and sleeping, but there is a much more elegant solution.
 
 The [inotify](https://www.man7.org/linux/man-pages/man7/inotify.7.html) API provides a mechanism for monitoring

@@ -7,7 +7,10 @@
   location          = 'Houston, Texas'
   birth_location    = 'Homewood, Alabama'
   wife              = 'Catherine'
-  knownhost         = '[KnownHost](https://knownhost.come)'
-  cpanel            = '[cPanel](https://cpanel.net)'
-  bmo_logo_menu     =  '[![](/assets/bmo_50x64.png){style="float: left;margin-right: 20px;margin-top: 20px;"}](/)'
+  knownhost         = '[KnownHost](https://knownhost.come){target=_blank}'
+  cpanel            = '[cPanel](https://cpanel.net){target=_blank}'
+  bmo_logo_menu     = '[![](/assets/bmo_50x64.png){style="float: left;margin-right: 20px;margin-top: 20px;"}](/)'
+  contact           = 'contact [at] bmo.dev'
+  github_url        = 'https://github.com/bmodotdev'
+  github_link       = '[github](https://github.com/bmodotdev){target=_blank}'
 %]

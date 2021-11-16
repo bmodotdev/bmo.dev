@@ -11,6 +11,6 @@ header-includes: |
 
 [% INCLUDE header.md.tt %]
 
-contact [at] bmo.dev
+[% contact %]
 
 [% INCLUDE footer.md.tt %]

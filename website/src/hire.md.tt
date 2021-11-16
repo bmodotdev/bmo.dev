@@ -1,0 +1,120 @@
+[% PROCESS definitions.tt %]
+
+---
+title: 'hire me'
+keywords: [hire, resume]
+description: |
+    My CV and work experience.
+lang: en-US
+indent: true
+header-includes: |
+  [% bmo_logo_menu %]
+---
+
+[% INCLUDE header.md.tt %]
+
+<br/>
+
+::: {style=text-align:center}
+## William E Little Jr
+hire [at] bmo.dev • [% github_link %] • [% location %]
+:::
+
+Hi, thank you for considering me.
+My name is Will and I’m a Software Engineer at cPanel, a server management platform.
+I am a Linux and electronics enthusiast who thoroughly enjoys diving into challenging problems.
+I am deeply driven by an epistemic curiosity.
+I want to know how things work and most importantly, why.
+
+## Objective
+I seek opportunities where I can expand my knowledge of Linux, systems engineering, and development.
+I wish to be challenged with new and difficult problems, and
+I aspire to work with a team that fosters a culture of symbiotic growth.
+
+## Work Experience
+
+**cPanel**, Houston TX, **September 2016 - Present**
+: * *Software Engineer I, II*
+* *Senior Technical Analyst, I, II, III, IV*
+
+While working at cPanel, I have consistently exceeded expectations of my role, resulting in a promotion roughly every year.
+
+As a Software Engineer, I improved and extended our helpdesk integrations, built developer tools to increase productivity,
+and identified and fixed security issues in our infrastructure and codebase.
+As a Level II Software Engineer, I work with our SRE’s to design scalable and maintainable systems.
+
+As a Senior Technical Analyst, I was the last line of escalation for difficult to solve problems;
+often times managing upstream bug reports.
+In addition to participating in interviews and reviews, I was a mentor to new or struggling colleagues, and helped shape
+department policies and training material.
+
+**KnownHost**, Birmingham AL, **November 2013 - 2016**
+: * *Abuse Specialist*
+* *Veteran Technical Support Operator*
+
+As an Abuse Specialist, I helped ensure our quality of service by working with clients to investigate compromised systems;
+identifying exploits and backdoors.
+I also authored and maintained scripts for support staff and system tasks.
+
+As a Veteran Technical Support Operator, I supported CentOS systems with cPanel, DirectAdmin, and Plesk control panels.
+Additionally, I provided coaching to new or struggling colleagues.
+
+## Languages
+
+**Expert**
+: * Perl
+* Bash/POSIX sh
+
+**Proficient**
+: * JavaScript
+ * PHP
+
+**Learning**
+: * Go
+
+**Curious**
+: * Flutter
+* Dart
+
+## Tools/Platforms
+
+**Operating Systems**
+: * CentOS
+* Ubuntu
+* Arch
+
+**Debugging**
+: * Systemtap
+* Strace
+
+**Services**
+: * MySQL/MariaDB
+* Apache/Nginx
+* Dovecot/Exim
+
+**DevOps**
+: * Docker
+* Ansible
+* GitLab CI/CD
+* k8s/k3s (learning)
+
+## Feedback
+Hear what my colleagues and supervisors have been saying about my work:
+
+> “Will didn’t simply ‘work this project’ but rather he lead it” - Product Owner
+
+> “Your git help is invaluable” - Mentee
+
+> “[Will] was able to make an immediate impact on the project by quickly gaining an understanding of the design
+and contributing new production-ready code within just two weeks of joining the team” - Senior Developer
+
+> “William has distinguished himself by identifying security problems in the code under review and suggesting
+how those problems can be mitigated.” - Senior Developer
+
+> “A strong drive to tackle any obstacle” - VP
+
+> “The solution [Will] created is impressive and a big boost to the productivity of the team” - Colleague
+
+> “[Will] has been instrumental in allowing us to maintain a quality service to our customer” - COO
+
+[% INCLUDE footer.md.tt %]

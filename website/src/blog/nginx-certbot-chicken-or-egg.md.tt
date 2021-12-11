@@ -13,7 +13,7 @@ description: |
 
 [% INCLUDE header.md.tt %]
 
-[![chicken or egg](/assets/chicken_or_egg.jpg)](/assets/chicken_or_egg.jpg)
+[![chicken or egg](/assets/chicken_or_egg.jpg)](https://search.creativecommons.org/photos/d60fd58d-45d3-49b9-b2a8-40a7f4b91f75){target="_blank"}
 If you are like me, you want your website to be as *“set it, and forget it”* as possible.
 I don’t want to worry about whether I have a TLS certificate or not, I just want my website served over HTTPS.
 Now there are plenty of blog posts about how to setup your website with a free TLS certificate; however, most

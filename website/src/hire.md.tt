@@ -2,11 +2,11 @@
 
 ---
 title: 'hire me'
-keywords: [hire, resume]
+keywords: [hire, resume, cv]
+date: December 11, 2021
 description: |
     My CV and work experience.
 lang: en-US
-indent: true
 header-includes: |
   [% bmo_logo_menu %]
 ---
@@ -15,16 +15,22 @@ header-includes: |
 
 <br/>
 
+<!--- resume-snip-begin -->
+
 ::: {style=text-align:center}
 ## William E Little Jr
 hire [at] bmo.dev • [% github_link %] • [% location %]
 :::
+
+<!--- resume-snip-end -->
 
 Hi, thank you for considering me.
 My name is Will and I’m a Software Engineer at cPanel, a server management platform.
 I am a Linux and electronics enthusiast who thoroughly enjoys diving into challenging problems.
 I am deeply driven by an epistemic curiosity.
 I want to know how things work and most importantly, why.
+
+<!--- resume-snip-begin -->
 
 ## Objective
 I seek opportunities where I can expand my knowledge of Linux, systems engineering, and development.
@@ -39,64 +45,114 @@ I aspire to work with a team that fosters a culture of symbiotic growth.
 
 While working at cPanel, I have consistently exceeded expectations of my role, resulting in a promotion roughly every year.
 
-As a Software Engineer, I improved and extended our helpdesk integrations, built developer tools to increase productivity,
-and identified and fixed security issues in our infrastructure and codebase.
-As a Level II Software Engineer, I work with our SRE’s to design scalable and maintainable systems.
+As a *Software Engineer*, I extended our helpdesk integrations, built developer tools to increase productivity,
+and identified and fixed security issues in infrastructure and codebase.
+As a *Software Engineer II*, I collaborate with SRE’s to design scalable and maintainable systems,
+participate in interviews,
+and work on our e-commerce team.
 
-As a Senior Technical Analyst, I was the last line of escalation for difficult to solve problems;
+As a *Senior Technical Analyst*, I was the last line of escalation for difficult to solve problems;
 often times managing upstream bug reports.
 In addition to participating in interviews and reviews, I was a mentor to new or struggling colleagues, and helped shape
 department policies and training material.
+
+<br/>
 
 **KnownHost**, Birmingham AL, **November 2013 - 2016**
 : * *Abuse Specialist*
 * *Veteran Technical Support Operator*
 
-As an Abuse Specialist, I helped ensure our quality of service by working with clients to investigate compromised systems;
+As an *Abuse Specialist*, I helped ensure our quality of service by working with clients to investigate compromised systems;
 identifying exploits and backdoors.
-I also authored and maintained scripts for support staff and system tasks.
+I also authored and maintained scripts for support staff, sysadmin tasks, and abuse.
 
-As a Veteran Technical Support Operator, I supported CentOS systems with cPanel, DirectAdmin, and Plesk control panels.
+As a *Veteran Technical Support Operator*, I supported CentOS systems with cPanel, DirectAdmin, and Plesk control panels.
 Additionally, I provided coaching to new or struggling colleagues.
 
+:::::: {style="page-break-inside: avoid"}
 ## Languages
+::: {style="display: inline-block; vertical-align: top; margin-inline: 20px"}
+##### **Expert** {style="margin-bottom: 0"}
+* Perl
+* Bash, POSIX sh
+:::
 
-**Expert**
-: * Perl
-* Bash/POSIX sh
+::: {style="display: inline-block; vertical-align: top; margin-inline: 20px"}
+##### **Proficient** {style="margin-bottom: 0"}
+* Awk
+* JavaScript
+* PHP
+:::
 
-**Proficient**
-: * JavaScript
- * PHP
+::: {style="display: inline-block; vertical-align: top; margin-inline: 20px"}
+##### **Learning** {style="margin-bottom: 0"}
+* Go
+:::
 
-**Learning**
-: * Go
-
-**Curious**
-: * Flutter
+::: {style="display: inline-block; vertical-align: top; margin-inline: 20px"}
+##### **Curious** {style="margin-bottom: 0"}
 * Dart
+* Flutter
+:::
+::::::
 
-## Tools/Platforms
-
-**Operating Systems**
-: * CentOS
-* Ubuntu
+:::::: {style="page-break-inside: avoid"}
+## Skills
+::: {style="display: inline-block; vertical-align: top; margin-inline: 20px"}
+##### **Operating Systems** {style="margin-bottom: 0"}
+* AlmaLinux
+* Alpine
 * Arch
+* CentOS
+* Debian
+* Ubuntu
+:::
 
-**Debugging**
-: * Systemtap
+::: {style="display: inline-block; vertical-align: top; margin-inline: 20px"}
+##### **Debugging** {style="margin-bottom: 0"}
+* GDB
 * Strace
+* Systemtap
+:::
 
-**Services**
-: * MySQL/MariaDB
-* Apache/Nginx
-* Dovecot/Exim
+::: {style="display: inline-block; vertical-align: top; margin-inline: 20px"}
+##### **Software** {style="margin-bottom: 0"}
+* Apache
+* Dovecot
+* Exim
+* Grafana
+* Fluentd, fluent-bit
+* InfluxDB
+* MySQL, MariaDB
+* Nginx
+* RabbitMQ
+* Redis
+* WordPress
+:::
 
-**DevOps**
-: * Docker
+::: {style="display: inline-block; vertical-align: top; margin-inline: 20px"}
+##### **Development** {style="margin-bottom: 0"}
+* Gitlab
+* OpenAPI
+* Scrum
+:::
+
+::: {style="display: inline-block; vertical-align: top; margin-inline: 20px"}
+##### **DevOps** {style="margin-bottom: 0"}
 * Ansible
+* Docker
 * GitLab CI/CD
-* k8s/k3s (learning)
+* k8s (learning)
+:::
+
+::: {style="display: inline-block; vertical-align: top; margin-inline: 20px"}
+##### **SaaS** {style="margin-bottom: 0"}
+* Confluence
+* Github
+* Jira
+* Zendesk
+:::
+::::::
 
 ## Feedback
 Hear what my colleagues and supervisors have been saying about my work:
@@ -115,6 +171,8 @@ how those problems can be mitigated.” - Senior Developer
 
 > “The solution [Will] created is impressive and a big boost to the productivity of the team” - Colleague
 
-> “[Will] has been instrumental in allowing us to maintain a quality service to our customer” - COO
+> “[Will] has been instrumental in allowing us to maintain a quality service to our customers” - COO
+
+<!--- resume-snip-end -->
 
 [% INCLUDE footer.md.tt %]

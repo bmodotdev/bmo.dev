@@ -1,0 +1,56 @@
+[% PROCESS definitions.tt %]
+
+---
+title: 'Bill Little: Lab Tech'
+keywords: ['bill little', blog, personal]
+date: December 8, 2021
+description: |
+    Bill Little was a Lab Technician
+    for the University of Alabama Physics Department.
+lang: en-US
+header-includes: |
+  [% bmo_logo_menu %]
+---
+
+[% INCLUDE header.md.tt %]
+
+[![Bill Little - Lab Tech](/assets/Bill-Little-UAB-badge_300x400.jpg){.float-left}](/assets/Bill-Little-UAB-badge_300x400.jpg)
+
+In my eyes, “Lab Tech” was such a huge part of who my dad was as a person.
+As a child, I always found myself sneaking into the “Computer Room” of his apartment;
+a room of floor-to-ceiling shelves, absolutely filled to the brim with all manners of perplexing gadgets.
+It felt like my dad was Batman and this room was his bat cave.
+There were beige boxes and CRT’s, oscilloscopes and test benches, schematics, arrays of control panels, tesla coils, even lasers!
+
+Working at a UAB, Bill was constantly coming across surplus or non-functional hardware the University was throwing out.
+Often times, my dad had absolutely no use for the gadgets, but he used them as an opportunity to bond with me and encourage my curiosity.
+Dead hard drives were always a big hit.
+My dad would pull out his tool box and we’d plop down on the floor and start dissecting.
+
+<center>[![Computer Room](/assets/computer_room_600x159.jpg)](/assets/computer_room_600x159.jpg)</center>
+
+Looking back, probably one of the coolest things he brought home was a 14-inch hard drive; we’re talking less than 100MB per platter!
+Once we got it fully apart, the platters quickly became hats or weapons like the movie Tron.
+Unfortunately, over the years the 14-inch platters, and many other miscellaneous gadgets were lost or discarded.
+
+[![Miniscribe Model 9380E](/assets/miniscribe-9380E_600x450.jpg){.float-right}](/assets/miniscribe-9380E_600x450.jpg)
+
+This drive is a 5.25” 322MB Miniscribe model 9380E that we took apart together, with a 2.5” SSD for comparison.
+I still remember tearing this one apart; my dad peppering in comments about magnets and sectors.
+Once the internals were exposed, he broke out the function generator, and showed how the heads moved across the platters,
+applying different waveforms and frequencies.
+
+I love having this sit on my desk while working.
+When I’m deep in thought about a difficult problem, I find myself spinning the platter like a fidget spinner.
+There is something soothing, maybe grounding, about holding a 30 year old relic while troubleshooting modern problems.
+
+Of course, the days where I played sick from school and went to work with my dad were the best.
+I tagged along and met one professor who created synthetic diamonds to be used in different experiments;
+another who worked with the lasers.
+Also, one who I knew as the “penguin lady” because her office was full of penguin posters, penguin books, all kinds of penguin memorabilia.
+Which is funny to think about now, because she was most certainly a Linux user, and now Linux has become such a big part of my life.
+
+While I quickly followed my dad’s love of science and technology, I realize now that my dad wasn’t just trying to teach me
+about electronics or physics, he was nurturing my curiosity and bonding with me over the things he was truly passionate about in life.
+
+[% INCLUDE footer.md.tt %]

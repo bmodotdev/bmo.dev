@@ -11,6 +11,18 @@ header-includes: |
 
 [% INCLUDE header.md.tt %]
 
+<br/>
+
+### Email
 [% contact %]
+
+### irc.libera.chat
+@bmodotdev
+
+### Discord
+bmo.dev#8203
+
+### Slack
+[bmodotdev.slack.com](https://bmodotdev.slack.com/team/U02QDUHBX4K)
 
 [% INCLUDE footer.md.tt %]

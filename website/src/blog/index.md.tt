@@ -10,6 +10,8 @@ description: |
 
 [% INCLUDE header.md.tt %]
 
+### [Bill Little: Lab Tech](/blog/bill-little-lab-tech)
+
 ### [Nginx & Certbot: Chicken or Egg?](/blog/nginx-certbot-chicken-or-egg)
 
 [% INCLUDE footer.md.tt %]

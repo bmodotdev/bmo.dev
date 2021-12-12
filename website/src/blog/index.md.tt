@@ -10,6 +10,8 @@ description: |
 
 [% INCLUDE header.md.tt %]
 
+### [I am not my code](/blog/i-am-not-my-code)
+
 ### [Bill Little: Lab Tech](/blog/bill-little-lab-tech)
 
 ### [Nginx & Certbot: Chicken or Egg?](/blog/nginx-certbot-chicken-or-egg)

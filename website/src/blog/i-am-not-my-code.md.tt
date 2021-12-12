@@ -1,0 +1,50 @@
+[% PROCESS definitions.tt %]
+
+---
+title: 'I am not my code'
+keywords: [collaboration, mantra, 'code review']
+date: December 11, 2021
+description: |
+    How well do you receive feedback in your pull requests?
+lang: en-US
+header-includes: |
+  [% bmo_logo_menu %]
+---
+
+[% INCLUDE header.md.tt %]
+
+::: {.float-left}
+[![meditation-rocks](/assets/meditation-rocks_300x399.jpg)](https://search.creativecommons.org/photos/fb024820-72a2-4638-848f-afb8859a5c60){target="_blank"}
+:::
+
+As a new developer, opening your first pull request can be daunting and leave you filled with anxiety.
+You may be experiencing imposter syndrome and fear a strong rebuke of your earnest attempt to contribute.
+Upon receiving critical feedback, you may completely give up or worse, lash out;
+neither of which allows you to process the feedback and learn from it.
+
+I realized I was personifying my pull requests.
+By opening the pull request, I was neatly packaging and sharing all the time I spent researching, debugging,
+maybe even banging my head against the desk.
+Through the struggles I overcame or the clever way I solved the problem,
+allowed myself to embody my pride and self-worth into my code,
+ultimately setting myself up for failure.
+
+By attaching my pride and self-worth to a pull request,
+I was putting great weight in the need for it to be accepted with open arms and subsequently,
+closing myself off from receiving valuable feedback I needed to learn and grow.
+
+As I submitted more and more pull requests,
+I developed a mantra to separate myself from the code I wrote:
+
+> I am not my code
+
+By separating my ego, pride, and self-worth from my code,
+I lowered the bias I held for my own code and opened my mind to new ways the problem might be solved.
+I allowed myself to find value in the criticism and
+recognized feedback can be just as important as the work I put into my code.
+I began to communicate more effectively with my colleagues, learn at a faster pace, remove the anxiety from my contributions,
+and dispel feelings of anger or pessimism when receiving critical feedback.
+
+I can say I now crave feedback!
+
+[% INCLUDE footer.md.tt %]

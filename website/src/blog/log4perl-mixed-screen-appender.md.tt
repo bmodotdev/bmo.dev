@@ -1,0 +1,65 @@
+[% PROCESS definitions.tt %]
+
+---
+title: 'Log4perl Mixed Screen Appender'
+keywords: [ log4perl, perl ]
+date: February 14, 2022
+description: |
+    Log4perl provides a powerful framework for logging in many different ways,
+    but how can we supported mixed output streams wth the Screen Appender?
+lang: en-US
+header-includes: |
+  [% bmo_logo_menu %]
+---
+
+[% INCLUDE header.md.tt %]
+
+[![perl latte](/assets/perl-latte_600x800.jpg)](https://wordpress.org/openverse/image/1ca99fad-586c-4a9a-9c90-2595d2ea3b00){target="_blank"}
+
+Log4perl provides a powerful framework for logging in Perl, based off the now infamous Log4j module.
+While it doesn’t support *JNDI* to execute remote code arbitrarily,
+it does just about anything else you could reasonably want it to.
+
+Log4perl is a modular framework that allows you to appends to many different sources,
+e.g. files, sockets, DBI, and of course, directly to the screen.
+While using the [*Log::Log4perl::Appender::Screen*](https://metacpan.org/pod/Log::Log4perl::Appender::Screen){target="_blank"}
+module in a project, I noticed it only supported printing either to *STDOUT* or to *STDERR*,
+whether that log message was FATAL or just INFO:
+```
+# Legacy - all levels to STDOUT
+log4perl.appender.Screen.stderr = 0
+
+# Legacy - all levels to STDERR
+log4perl.appender.Screen.stderr = 1
+```
+
+Usually when logging, we reserve *STDERR* for actual errors and the rest goes to *STDOUT*.
+This is even more important when it comes to monitoring a script that logs with Log4perl.
+When running a script in CI/CD, any output to *STDERR* could cause a pipeline to fail.
+If Log4perl does not supporting mixed *STDOUT*/*STDERR*, we lose the ability to detect errors easily in CI/CD pipelines;
+our debug or info statements could be interpreted as an error, or our errors could be ignored!
+
+I created this [PR](https://github.com/mschilli/log4perl/pull/110){target="_blank"} to add that feature!
+We can now have a configuration like below, while still supporting legacy configurations from above:
+```
+# New - only ERROR and FATAL to STDERR, the rest to STDOUT
+log4perl.appender.Screen.stderr.ERROR = 1
+log4perl.appender.Screen.stderr.FATAL = 1
+```
+
+Adding that feature was as simple as below,
+[*Log::Log4perl::Appender::Screen::log*](https://github.com/bmodotdev/log4perl/blob/screen-appender-stderr-per-log4p_level/lib/Log/Log4perl/Appender/Screen.pm#L34){target="_blank"}:
+```
+my $fh = \*STDOUT;
+if (ref $self->{stderr}) {
+    $fh = \*STDERR if $self->{stderr}{ $params{'log4p_level'} }
+                        || $self->{stderr}{ lc $params{'log4p_level'} };
+} elsif ($self->{stderr}) {
+    $fh = \*STDERR;
+}
+
+print $fh $params{message};
+```
+
+With this change, we would also get new test coverage for both the legacy methods of setting *STDERR*
+and the new method to support mixed output!

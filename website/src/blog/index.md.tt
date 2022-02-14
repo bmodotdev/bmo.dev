@@ -10,6 +10,8 @@ description: |
 
 [% INCLUDE header.md.tt %]
 
+### [Log4perl Mixed Screen Appender](/blog/log4perl-mixed-screen-appender)
+
 ### [Tracing Signals in Linux](/blog/tracing-signals-in-linux)
 
 ### [I am not my code](/blog/i-am-not-my-code)

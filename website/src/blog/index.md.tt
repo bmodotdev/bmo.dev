@@ -10,6 +10,8 @@ description: |
 
 [% INCLUDE header.md.tt %]
 
+### [Tracing Signals in Linux](/blog/tracing-signals-in-linux)
+
 ### [I am not my code](/blog/i-am-not-my-code)
 
 ### [Bill Little: Lab Tech](/blog/bill-little-lab-tech)

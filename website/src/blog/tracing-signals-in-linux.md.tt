@@ -1,0 +1,168 @@
+[% PROCESS definitions.tt %]
+
+---
+title: 'Tracing Signals in Linux'
+keywords: [ signals, systemtap, strace, linux ]
+date: Feburary 13, 2022
+description: |
+    Signals, or software interrupts, are used to communicate with a process.
+    They could be used to kill a process, resetart, or signal a segmentation fault,
+    but how can we know where that signal came from?
+lang: en-US
+header-includes: |
+  [% bmo_logo_menu %]
+---
+
+[% INCLUDE header.md.tt %]
+
+[![traffic light](/assets/traffic_light.jpg)](https://wordpress.org/openverse/image/2bda805f-d5af-41c5-90a0-3de809643181){target="_blank"}
+
+Many programs in Linux use [signals](https://www.man7.org/linux/man-pages/man7/signal.7.html) to communicate with other processes.
+Signals are commonly used by init daemons, like init.d or systemd, to control services;
+for example stopping or restarting a service gracefully.
+Signals are also used by multiprocess applications to control their children processes.
+
+As a system administrator, how do you know what signals are sent to an application?
+A good application will log appropriately or provide some debug mode, but what if the application does not provide this?
+
+## The mystery of the restarting FTP server
+In my former role as a *Senior Technical Analyst*, I was the last line of defense in solving difficult tickets we received from our End-users.
+One particularly frustrating ticket was the mystery of the restarting FTP server.
+The End-user reported that the FTP server was continuously restarting at seemingly random intervals.
+As a result, their monitoring service was constantly complaining.
+
+Checking the logs, we could see it was a normal graceful restart.
+Typically, this is seen when software is updated or perhaps when a new configuration is applied.
+The restarts didn’t quite line up when cross-referencing other logs or checking file timestamps of the configurations.
+Even more frustrating and puzzling, it seemed to always happen just after our technicians gave up on investigating or monitoring.
+
+## strace
+A goto tool in any system administrator’s toolbox is [*strace*](https://www.man7.org/linux/man-pages/man1/strace.1.html):
+
+> In the simplest case strace runs the specified command until it
+> exits.  It intercepts and records the system calls which are
+> called by a process and the signals which are received by a
+> process.  The name of each system call, its arguments and its
+> return value are printed on standard error or to the file
+> specified with the -o option.
+
+*strace* is such a powerful tool that the output or the number of options can be overwhelming to beginners; however,
+the more you use it, the more you will begin to understand and recognize what is happening at a system level.
+I encourage you to just jump in!
+You will find it archaic and perhaps cumbersome at first, but you will learn so much about how applications work
+and how they interact with the operating system.
+
+> Students, hackers and the overly-curious will find that a
+> great deal can be learned about a system and its system
+> calls by tracing even ordinary programs.
+
+The first step for an in depth look at what is happening to the FTP server is tracing the system calls.
+Let’s take a very basic example of how we can use *strace* to watch a process and why it might have exited.
+In this example, the process we are inspecting is the *sleep* command, which we will throw into the background.
+We will also throw our *strace* process into the background so we can interact with the original *sleep* process.
+
+```
+# Launch our example process
+$ sleep 300 &
+[3] 106834
+
+# Trace the process, to reduce noise, only trace signals
+$ sudo strace --attach 106834 -e trace=signal &
+[4] 107084
+strace: Process 106834 attached
+
+# Send a signal to our example process
+$ kill -SIGTERM 106834
+--- SIGTERM {si_signo=SIGTERM, si_code=SI_USER, si_pid=74326, si_uid=1000} ---
++++ killed by SIGTERM +++
+
+$ echo $$
+74326
+```
+
+We can see from the output of *strace* that our *sleep* process received a SIGTERM, then promptly exited.
+We can also see additional information, *siginfo*, in the braces like the PID and UID that sent the signal.
+In *bash* `$$` produces the PID of the current shell, which confirms the correlation in the `si_pid` *siginfo* field.
+
+So that makes identifying who sent this rather easy, but what if that PID is no longer running?
+In the case of our FTP server, the process had always already exited before we could investigate.
+How do we track this further?
+
+## systemtap
+[*systemtap*](https://sourceware.org/systemtap/wiki) allows you to write code and attach it directly to the kernel as a module.
+
+> SystemTap provides free software (GPL) infrastructure to simplify the gathering of information about the running Linux system. This assists diagnosis of a performance or functional problem. SystemTap eliminates the need for the developer to go through the tedious and disruptive instrument, recompile, install, and reboot sequence that may be otherwise required to collect data.
+>
+> SystemTap provides a simple command line interface and scripting language for writing instrumentation for a live running system. We are publishing samples, as well as enlarging the internal "tapset" script library to aid reuse and abstraction.
+
+Before we get into *systemtap*, let’s setup a test environment using *vagrant* and Ubuntu 20.04:
+```
+$ mkdir systemtap && $_
+$ vagrant init generic/ubuntu2004
+$ vagrant up
+$ vagrant ssh
+
+$ sudo su -
+```
+
+### Installing systemtap
+We can now install systemtap, kernel debug symbols, and gcc in our test server:
+```
+# cat <<EOF > /etc/apt/sources.list.d/ddebs.list
+deb http://ddebs.ubuntu.com $(lsb_release -cs) main restricted universe multiverse
+deb http://ddebs.ubuntu.com $(lsb_release -cs)-updates main restricted universe multiverse
+deb http://ddebs.ubuntu.com $(lsb_release -cs)-proposed main restricted universe multiverse
+
+# apt install ubuntu-dbgsym-keyring
+# apt-get update
+# apt install linux-image-"$(uname -r)"-dbgsym systemtap gcc
+```
+
+Let’s do a simple test to ensure we have basic systemtap functionality with the command below:
+```
+# stap -ve 'probe begin { log("Hello World!") }' &
+[1] 35145
+Pass 1: parsed user script and 477 library scripts using 105496virt/90832res/7288shr/83648data kb, in 120usr/20sys/135real ms.
+Pass 2: analyzed script: 1 probe, 1 function, 0 embeds, 0 globals using 106948virt/92656res/7544shr/85100data kb, in 0usr/10sys/6real ms.
+Pass 3: translated to C into "/tmp/stapShbQhJ/stap_d5e149da6109a20d77c20a3618c3a15c_944_src.c" using 106948virt/92656res/7544shr/85100data kb, in 0usr/0sys/0real ms.
+Pass 4: compiled C into "stap_d5e149da6109a20d77c20a3618c3a15c_944.ko" in 1260usr/120sys/1374real ms.
+Pass 5: starting run.
+Hello World!
+
+# lsmod | grep stap
+stap_d5e149da6109a20d77c20a3618c3a1_35684   192512  2
+
+# kill %1
+Pass 5: run completed in 10usr/10sys/14417real ms.
+[1]+  Done                    stap -ve 'probe begin { log("Hello World!") }'
+
+# lsmod | grep stap
+#
+``` 
+
+Pairing the `signal.send` probe with [stapfuncs](https://linux.die.net/man/5/stapfuncs)
+to walk the parent process until we get to 0 or 1, we can track which process sent a signal, and where it came from.
+Now, even when a process has already exited, we can understand how it may have started, something we could not do earlier with strace alone.
+<script src="https://emgithub.com/embed.js?target=https%3A%2F%2Fgithub.com%2Fbmodotdev%2Fsystemtap-scripts%2Fblob%2Fmain%2Fsignal_tracker.stp&style=github&showBorder=on&showFileMeta=on&showCopy=on"></script>
+
+To keep the process running, execute the script in a *screen* or *tmux* session and log the output.
+In the case of our mysteriously restarting FTP server, we saw output like below:
+```
+# stap signal_tracker.stp | tee -a signals.txt
+[Mon Feb 14 06:44:49 2022] SIGHUP sent to vsftpd [41795] by killall [46034] 0:0 🔫 bash [45925] 0:0 🔫 su [45924] 0:0 🔫 sudo [45922] 0:0 🔫 bash [45914] 1000:1000 🔫 sshd [45913] 1000:1000 🔫 sshd [45832] 0:0 🔫 sshd [1050] 0:0 🔫 systemd [1] 0:0
+[Mon Feb 14 06:44:49 2022] SIGHUP sent to bash [45914] by bash [45914] 1000:1000 🔫 sshd [45913] 1000:1000 🔫 sshd [45832] 0:0 🔫 sshd [1050] 0:0 🔫 systemd [1] 0:0
+```
+
+The restart was actually coming from a SSH session, suspiciously close to when our technicians would logout after investigating or monitoring!
+Low and behold, someone had the bright idea to do the following:
+```
+# cat ~/.bash_logout
+killall -SIGHUP vsftpd
+```
+
+## Conclusion
+Signals are used all the time to communicate between processes.
+*strace* allows us to see signals received by procsses;
+however, *systemtap* allows us to trace and dynamically execute code we can use to print additional debugging information.
+
+P.S. Please don’t restart services using logout scripts 🤮

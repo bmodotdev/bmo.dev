@@ -2,3 +2,4 @@ website/markdown
 website/dist
 nginx/var_www/bmo.dev
 *.env
+*.swp

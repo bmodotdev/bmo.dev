@@ -10,6 +10,8 @@ description: |
 
 [% INCLUDE header.md.tt %]
 
+### [Backtraces in Bash](/blog/backtraces-in-bash)
+
 ### [Log4perl Mixed Screen Appender](/blog/log4perl-mixed-screen-appender)
 
 ### [Tracing Signals in Linux](/blog/tracing-signals-in-linux)

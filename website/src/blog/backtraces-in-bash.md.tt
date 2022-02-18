@@ -1,0 +1,117 @@
+[% PROCESS definitions.tt %]
+
+---
+title: 'Backtraces in Bash'
+keywords: [ bash, backtrace, logging ]
+date: February 18, 2022
+description: |
+    Bash is just a scripting language, you shouldn´t expect such nice features like backtraces!
+    Hold that thought!
+lang: en-US
+header-includes: |
+  [% bmo_logo_menu %]
+---
+
+[% INCLUDE header.md.tt %]
+
+[![Bash](/assets/BASH_logo-transparent-bg-color.svg)](https://www.gnu.org/software/bash/){target="_blank"}
+
+Bash is just a scripting language, right?
+Well yeah, but Bash really shines in it’s ability to provide users with ability to bang out oneliners
+or quick scripts to get results fast.
+In the right hands, it can easily help solve outages without the sysadmin breaking a sweat;
+for instance, transforming tens of thousands of Apache vhosts to get the webserver up and running again.
+
+Bash is a powerful language, but it comes with a lot of rough edges that take careful studying
+or to be more realistic, a lot of trial and error that could lead to serious damage.
+We often call these quirks [*Bashism’s*](http://mywiki.wooledge.org/Bashism){target="_blank"}
+or [*pitfalls*](http://mywiki.wooledge.org/BashPitfalls){target="_blank"}.
+
+## Debugging
+
+Many believe a Bash script is best kept under 100 lines as it can very quickly get unwieldy;
+but what makes using Bash so much worse the longer the script becomes?
+I think one of the biggest issues can be debugging a broken script.
+If you don’t already have a solid idea of where the problem is, it can be really difficult to track down.
+
+Really though, couldn’t that be said about most languages?
+What makes a difference is the author intentionally writing thoughtful error handling.
+Unfortunately, that is just not commonly found in a lot of people’s Bash scripts.
+I think that really speaks to the power and flexibility Bash has to offer;
+it doesn’t take too much effort or understanding to bang out a oneliner
+and it work in 9 out of 10 scenarios you would use it in.
+
+## Backtraces
+
+One of the best features a language can provide in terms of error handling is the backtrace,
+a frame-by-frame unwinding of the events that lead to a fatal error.
+
+In Bash and Perl, the function we use is [*caller*](https://man7.org/linux/man-pages/man1/bash.1.html){target="_blank"}:
+
+> caller [expr]
+>
+> Returns the context of any active subroutine call[...]
+> If a non-negative integer is supplied as expr, caller displays the line number, subroutine name,
+> and source file corresponding to that position in the current execution call stack.
+
+Let’s take a simple example using three nested functions.
+I’ll type these out in one line, just as if I was typing into a terminal, so you can follow along:
+```
+$ foo() { read -r bt < <(caller "$frame") && echo "$bt" || echo "no caller"; }
+$ bar() { foo; }
+$ baz() { bar; }
+
+$ for i in {0..2}; do printf 'frame %s <= %s\n' "$i" "$(frame="$i" baz)";done
+frame 0 <= 1 bar main
+frame 1 <= 1 baz main
+frame 2 <= no caller
+```
+
+We can see function *baz()* called function *bar()* on line 1, then function *foo()* from line 1.
+We can also see that when a frame or stack doesn't exist, *caller* returns false,
+allowing us to know when to stop walking our stack.
+
+All of our building blocks are here, let’s clean it up.
+We start with a simple *die()* function that serves as a wrapper for our actual backtrace function, *print_backtrace()*.
+As this is a *die()* statement, we exit using optional positional parameter $2, defaulting to 1.
+
+<script src="/assets/js/blog-snippet-die.js"></script>
+
+The *print_backtrace()* function takes one optional positional argument,
+a non-negative integer representing which stack to begin our walk.
+We know that *die()* calls our backtrace function, so let’s skip frame 0 and pass 1.
+
+<script src="/assets/js/blog-snippet-print_backtrace.js"></script>
+
+When using while loops, it’s important to understand that each execution of the loop takes place in a subshell.
+This means if we increment our stack frame inside the loop, the change will not propagate outside,
+resulting in an endless loop.
+We workaround this by looping the *caller* function through process substitution.
+
+We also take advantage of reading in multiple variables from our *caller*,
+allowing us to better format the output however we like.
+When there are no more frames left, caller returns false, breaking our loop.
+Finally, we print the shell and end up with output like below:
+
+```
+FATAL [18/Feb/2022 00:04:29] Could not resolve “example.com”
+BACKTRACE [18/Feb/2022 00:04:29] get_dns@dns.sh:4 <= download@./install.sh:10 <= install@./install.sh:17 <= main@./install.sh:23 <= main@./install.sh:26 <= /bin/bash
+```
+
+## tl;dr
+
+Bash actually has backtraces!
+Any language you write code in, do *future you* a favor,
+take time for robust error handling.
+In Bash, that just means maintaining some source files or including them directly into your editor’s bash template.
+
+### Bash Resources
+
+An article about Bash without mentioning [Greg’s Wiki](http://mywiki.wooledge.org/){target="_blank"}
+or [The Bash Hacker’s Wiki](https://wiki.bash-hackers.org/){target="_blank"} would be a shame.
+They are absolutely phenomenal resources on Bash.
+
+Seriously consider using [ShellCheck](https://www.shellcheck.net/){target="_blank"} to lint your scripts!
+You will learn things as you go and get the immediate benefit of avoiding different bash pitfalls.
+
+Also, don’t be shy, drop by #bash on [irc.libera.chat](https://libera.chat/).

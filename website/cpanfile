@@ -1,0 +1,4 @@
+on 'develop' => sub {
+    requires 'Template::Toolkit';
+    requires 'Mojolicious';
+};

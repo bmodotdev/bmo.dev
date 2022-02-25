@@ -3,7 +3,7 @@
 ---
 title: 'Tracing Signals in Linux'
 keywords: [ signals, systemtap, strace, linux ]
-date: Feburary 13, 2022
+date: February 13, 2022
 description: |
     Signals, or software interrupts, are used to communicate with a process.
     They could be used to kill a process, resetart, or signal a segmentation fault,
@@ -17,7 +17,7 @@ header-includes: |
 
 [![traffic light](/assets/traffic_light.jpg)](https://wordpress.org/openverse/image/2bda805f-d5af-41c5-90a0-3de809643181){target="_blank"}
 
-Many programs in Linux use [signals](https://www.man7.org/linux/man-pages/man7/signal.7.html) to communicate with other processes.
+Many programs in Linux use [signals](https://www.man7.org/linux/man-pages/man7/signal.7.html){target="_blank"} to communicate with other processes.
 Signals are commonly used by init daemons, like init.d or systemd, to control services;
 for example stopping or restarting a service gracefully.
 Signals are also used by multiprocess applications to control their children processes.
@@ -37,7 +37,7 @@ The restarts didn’t quite line up when cross-referencing other logs or checkin
 Even more frustrating and puzzling, it seemed to always happen just after our technicians gave up on investigating or monitoring.
 
 ## strace
-A goto tool in any system administrator’s toolbox is [*strace*](https://www.man7.org/linux/man-pages/man1/strace.1.html):
+A goto tool in any system administrator’s toolbox is [*strace*](https://www.man7.org/linux/man-pages/man1/strace.1.html){target="_blank"}:
 
 > In the simplest case strace runs the specified command until it
 > exits.  It intercepts and records the system calls which are
@@ -89,7 +89,7 @@ In the case of our FTP server, the process had always already exited before we c
 How do we track this further?
 
 ## systemtap
-[*systemtap*](https://sourceware.org/systemtap/wiki) allows you to write code and attach it directly to the kernel as a module.
+[*systemtap*](https://sourceware.org/systemtap/wiki){target="_blank"} allows you to write code and attach it directly to the kernel as a module.
 
 > SystemTap provides free software (GPL) infrastructure to simplify the gathering of information about the running Linux system. This assists diagnosis of a performance or functional problem. SystemTap eliminates the need for the developer to go through the tedious and disruptive instrument, recompile, install, and reboot sequence that may be otherwise required to collect data.
 >
@@ -140,7 +140,7 @@ Pass 5: run completed in 10usr/10sys/14417real ms.
 #
 ``` 
 
-Pairing the `signal.send` probe with [stapfuncs](https://linux.die.net/man/5/stapfuncs)
+Pairing the `signal.send` probe with [stapfuncs](https://linux.die.net/man/5/stapfuncs){target="_blank"}
 to walk the parent process until we get to 0 or 1, we can track which process sent a signal, and where it came from.
 Now, even when a process has already exited, we can understand how it may have started, something we could not do earlier with strace alone.
 <script src="https://emgithub.com/embed.js?target=https%3A%2F%2Fgithub.com%2Fbmodotdev%2Fsystemtap-scripts%2Fblob%2Fmain%2Fsignal_tracker.stp&style=github&showBorder=on&showFileMeta=on&showCopy=on"></script>
